@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">安财校园通</string>
-    <string name="widget_day_description">今日课程：周次、当天课程与上下课状态</string>
-    <string name="widget_week_description">一周课表：整周网格，今天高亮</string>
-</resources>
