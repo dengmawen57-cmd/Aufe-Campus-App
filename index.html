@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0B5FBF">
+<meta name="description" content="安财校园通（Aufé Campus App）——安徽财经大学校园数据聚合 App，一次登录，聚合课表、选课、一卡通、宿舍电费、成绩与培养方案。">
+<title>安财校园通 · 一次登录，掌上校园尽在眼前</title>
+<style>
+  :root{
+    --brand:#0B5FBF;
+    --brand-deep:#074A98;
+    --brand-soft:#E8F1FC;
+    --ink:#10233B;
+    --muted:#5B6B80;
+    --line:#DDE7F3;
+    --bg:#F5F9FE;
+    --white:#fff;
+    --radius:20px;
+    --shadow:0 10px 30px rgba(11,95,191,.10);
+    --shadow-hover:0 18px 44px rgba(11,95,191,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei","WenQuanYi Micro Hei",system-ui,-apple-system,"Segoe UI",sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.75;-webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  img,svg{display:block}
+  .wrap{width:min(1120px,92vw);margin:0 auto}
+
+  /* ---------- 顶栏 ---------- */
+  header{
+    position:sticky;top:0;z-index:20;
+    background:rgba(255,255,255,.86);backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:70px;gap:20px}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:18px;letter-spacing:.3px}
+  .logo{
+    width:40px;height:40px;border-radius:12px;background:var(--brand);
+    display:grid;place-items:center;box-shadow:0 6px 16px rgba(11,95,191,.28);flex:none;
+  }
+  .brand small{display:block;font-size:11px;font-weight:500;color:var(--muted);letter-spacing:1.2px;line-height:1.2}
+  .nav-links{display:flex;gap:28px;font-size:14px;color:var(--muted)}
+  .nav-links a:hover{color:var(--brand)}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    border:none;cursor:pointer;font:inherit;font-weight:600;
+    padding:13px 26px;border-radius:999px;transition:transform .2s,box-shadow .2s,background .2s;
+    white-space:nowrap;
+  }
+  .btn svg{width:18px;height:18px}
+  .btn-primary{background:var(--brand);color:#fff;box-shadow:0 8px 20px rgba(11,95,191,.28)}
+  .btn-primary:hover{background:var(--brand-deep);transform:translateY(-2px);box-shadow:0 14px 28px rgba(11,95,191,.34)}
+  .btn-ghost{background:#fff;color:var(--brand);border:1.5px solid var(--line)}
+  .btn-ghost:hover{border-color:var(--brand);transform:translateY(-2px)}
+  .btn-lg{padding:16px 34px;font-size:16px}
+  .nav .btn{padding:10px 22px;font-size:14px}
+  :focus-visible{outline:3px solid #7FB2F0;outline-offset:3px}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;overflow:hidden;
+    background:linear-gradient(160deg,#fff 0%,#F0F6FE 55%,#E4EFFC 100%);
+    border-bottom:1px solid var(--line);
+  }
+  .hero::before{
+    content:"";position:absolute;width:560px;height:560px;right:-160px;top:-230px;
+    background:radial-gradient(circle,rgba(11,95,191,.14),transparent 68%);border-radius:50%;
+  }
+  .hero-inner{display:grid;grid-template-columns:1.08fr .92fr;align-items:center;gap:56px;padding:76px 0 84px;position:relative}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;background:var(--brand-soft);color:var(--brand-deep);
+    font-size:13px;font-weight:600;padding:7px 15px;border-radius:999px;margin-bottom:22px;
+  }
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--brand)}
+  h1{font-size:clamp(34px,4.4vw,54px);line-height:1.24;letter-spacing:-.5px;font-weight:800}
+  h1 span{color:var(--brand)}
+  .lead{margin-top:20px;font-size:17px;color:var(--muted);max-width:520px}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 32px}
+  .chip{
+    background:#fff;border:1px solid var(--line);border-radius:10px;
+    padding:7px 13px;font-size:13px;color:var(--brand-deep);font-weight:600;
+    box-shadow:0 2px 8px rgba(16,35,59,.04);
+  }
+  .hero-actions{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+  .hint{margin-top:18px;font-size:13px;color:var(--muted)}
+  .hint strong{color:var(--ink)}
+
+  /* 手机预览 */
+  .phone-stage{display:grid;place-items:center;position:relative}
+  .glow{position:absolute;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(11,95,191,.16),transparent 70%)}
+  .phone{
+    position:relative;width:272px;background:#fff;border:9px solid #16304F;border-radius:38px;
+    box-shadow:0 26px 60px rgba(16,35,59,.28);overflow:hidden;
+  }
+  .phone::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:82px;height:16px;background:#16304F;border-radius:0 0 12px 12px;z-index:2}
+  .status{display:flex;justify-content:space-between;font-size:9px;color:#7C8CA0;padding:10px 16px 4px}
+  .appbar{background:var(--brand);color:#fff;padding:12px 15px;display:flex;align-items:center;justify-content:space-between}
+  .appbar b{font-size:13px}
+  .appbar span{font-size:10px;opacity:.85}
+  .balance{
+    margin:10px 12px;background:var(--brand-soft);border-radius:10px;padding:9px 11px;
+    display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--brand-deep);
+  }
+  .balance b{font-size:14px}
+  .week{display:grid;grid-template-columns:26px repeat(5,1fr);gap:3px;padding:0 12px;font-size:8px;color:var(--muted);text-align:center}
+  .week i{font-style:normal;padding:3px 0}
+  .week .today{color:var(--brand);font-weight:700}
+  .grid{display:grid;grid-template-columns:26px repeat(5,1fr);gap:3px;padding:6px 12px 12px}
+  .t{font-size:7px;color:#9AA8BA;text-align:right;padding-top:2px}
+  .cell{height:30px;border-radius:4px;background:#F3F7FC}
+  .course{border-radius:5px;padding:4px 3px;height:30px;font-size:7px;line-height:1.35;color:#fff;overflow:hidden}
+  .c1{background:#0B5FBF}
+  .c2{background:#3E8DDD}
+  .c3{background:#18A07A}
+  .c4{background:#E08A2E}
+  .tabbar{display:flex;justify-content:space-around;border-top:1px solid var(--line);padding:9px 0 12px;font-size:8px;color:#9AA8BA}
+  .tabbar .on{color:var(--brand);font-weight:700}
+
+  /* ---------- 通用区块 ---------- */
+  section{padding:78px 0}
+  .sec-head{text-align:center;max-width:680px;margin:0 auto 46px}
+  .kicker{font-size:13px;font-weight:700;letter-spacing:2px;color:var(--brand);text-transform:uppercase}
+  h2{font-size:clamp(26px,3vw,36px);line-height:1.35;margin-top:10px;letter-spacing:-.3px}
+  .sec-head p{color:var(--muted);margin-top:12px;font-size:15px}
+  .features{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .card{
+    background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:26px 24px;
+    transition:transform .25s,box-shadow .25s,border-color .25s;
+  }
+  .card:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:#BBD5F5}
+  .ico{
+    width:46px;height:46px;border-radius:14px;background:var(--brand-soft);color:var(--brand);
+    display:grid;place-items:center;margin-bottom:18px;
+  }
+  .ico svg{width:24px;height:24px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .card h3{font-size:17px;margin-bottom:8px}
+  .card p{font-size:14px;color:var(--muted);line-height:1.8}
+  .tag{display:inline-block;margin-top:14px;font-size:11px;font-weight:600;color:var(--brand);background:var(--brand-soft);padding:3px 10px;border-radius:6px}
+
+  /* 亮点 */
+  .highlights{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+  .h-list{display:grid;gap:22px}
+  .h-item{display:flex;gap:16px}
+  .h-num{
+    flex:none;width:34px;height:34px;border-radius:10px;background:var(--brand);color:#fff;
+    display:grid;place-items:center;font-size:14px;font-weight:700;
+  }
+  .h-item h3{font-size:16px;margin-bottom:4px}
+  .h-item p{font-size:14px;color:var(--muted)}
+  .panel{
+    background:linear-gradient(150deg,var(--brand),var(--brand-deep));color:#fff;border-radius:24px;
+    padding:36px;box-shadow:var(--shadow);
+  }
+  .panel .quote{font-size:20px;font-weight:600;line-height:1.7}
+  .panel .sub{font-size:14px;opacity:.82;margin-top:16px}
+  .panel-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:30px;border-top:1px solid rgba(255,255,255,.24);padding-top:24px}
+  .panel-stats b{display:block;font-size:24px;line-height:1.3}
+  .panel-stats span{font-size:12px;opacity:.8}
+
+  /* 安装步骤 */
+  .steps{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .step-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .step{position:relative;padding:30px 26px;border:1px solid var(--line);border-radius:var(--radius);background:var(--bg)}
+  .step .n{font-size:34px;font-weight:800;color:#C8DDF6;line-height:1}
+  .step h3{margin:12px 0 8px;font-size:17px}
+  .step p{font-size:14px;color:var(--muted)}
+  .notice{
+    margin-top:28px;background:var(--brand-soft);border-left:4px solid var(--brand);border-radius:0 12px 12px 0;
+    padding:16px 20px;font-size:14px;color:var(--brand-deep);
+  }
+
+  /* 下载区 */
+  .download{position:relative;overflow:hidden;background:linear-gradient(135deg,#074A98,#0B5FBF 55%,#2A7BD6);color:#fff;text-align:center}
+  .download::after{content:"";position:absolute;width:420px;height:420px;left:-140px;bottom:-260px;border-radius:50%;background:rgba(255,255,255,.07)}
+  .download .wrap{position:relative}
+  .download h2{color:#fff}
+  .download p{color:rgba(255,255,255,.86);margin:14px auto 30px;max-width:560px;font-size:16px}
+  .btn-white{background:#fff;color:var(--brand-deep);box-shadow:0 12px 30px rgba(0,0,0,.18)}
+  .btn-white:hover{transform:translateY(-3px);box-shadow:0 18px 38px rgba(0,0,0,.24)}
+  .download .meta{margin-top:18px;font-size:13px;color:rgba(255,255,255,.75)}
+
+  /* 页脚 */
+  footer{background:#0C1E33;color:#9FB0C4;padding:38px 0;font-size:13px}
+  .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;align-items:center}
+  .foot b{color:#fff;font-size:15px}
+  .foot a{color:#C9DEF7}
+  .foot a:hover{text-decoration:underline}
+
+  /* toast */
+  #toast{
+    position:fixed;left:50%;bottom:32px;transform:translate(-50%,20px);z-index:50;
+    background:#0C1E33;color:#fff;padding:12px 22px;border-radius:999px;font-size:14px;
+    opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;box-shadow:0 10px 30px rgba(0,0,0,.25);
+  }
+  #toast.show{opacity:1;transform:translate(-50%,0)}
+
+  .fade{opacity:0;transform:translateY(18px);animation:fadeUp .7s ease forwards}
+  .d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.24s}.d4{animation-delay:.32s}
+  @keyframes fadeUp{to{opacity:1;transform:none}}
+
+  @media (max-width:960px){
+    .hero-inner{grid-template-columns:1fr;gap:44px;padding:56px 0 64px;text-align:center}
+    .lead{margin-left:auto;margin-right:auto}
+    .chips,.hero-actions,.eyebrow{justify-content:center}
+    .phone-stage{order:-1}
+    .phone{width:236px}
+    .glow{width:300px;height:300px}
+    .nav-links{display:none}
+    .cards,.step-grid{grid-template-columns:repeat(2,1fr)}
+    .highlights{grid-template-columns:1fr;gap:34px}
+    section{padding:60px 0}
+  }
+  @media (max-width:600px){
+    .cards,.step-grid{grid-template-columns:1fr}
+    .panel{padding:26px}
+    .panel-stats b{font-size:20px}
+    .btn-lg{width:100%}
+    .foot{flex-direction:column;align-items:flex-start}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+    .fade{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top" aria-label="安财校园通首页">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="26" height="26">
+          <path d="M20 9 L36 17 L20 25 L4 17 Z" fill="#fff"/>
+          <path d="M11 21 V27 C11 30 29 30 29 27 V21" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M36 17 V27" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+          <circle cx="36" cy="29" r="2.2" fill="#fff"/>
+        </svg>
+      </span>
+      <span>安财校园通<small>AUFÉ CAMPUS APP</small></span>
+    </a>
+    <nav class="nav-links" aria-label="页面导航">
+      <a href="#features">核心功能</a>
+      <a href="#why">产品亮点</a>
+      <a href="#install">安装说明</a>
+      <a href="#download">下载</a>
+    </nav>
+    <a class="btn btn-primary" data-download
+       href="https://wwaqi.lanzouv.com/iYr3R4ew2u9c"
+       target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/></svg>
+      下载 APK（密码：1111）
+    </a>
+  </div>
+</header>
+
+<main id="top">
+  <!-- Hero -->
+  <section class="hero" style="padding:0">
+    <div class="wrap hero-inner">
+      <div class="fade d1">
+        <span class="eyebrow"><span class="dot"></span>安徽财经大学 · 校园数据聚合 App</span>
+        <h1>一次登录，<br><span>掌上校园</span>尽在眼前</h1>
+        <p class="lead">课表、选课、一卡通、宿舍电费、成绩查询、第二课堂成绩单与培养方案——把散落在各个系统里的校园数据，收进一个原生 Android 应用。</p>
+        <div class="chips">
+          <span class="chip">v1.20.0</span>
+          <span class="chip">Android 7.0+</span>
+          <span class="chip">约 16 MB</span>
+          <span class="chip">Kotlin · Jetpack Compose · Material 3</span>
+        </div>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" data-download
+             href="https://wwaqi.lanzouv.com/iYr3R4ew2u9c"
+             target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/></svg>
+            立即下载 APK（密码：1111）
+          </a>
+          <a class="btn btn-ghost btn-lg" href="#features">看看有哪些功能 →</a>
+        </div>
+        <p class="hint">首次打开需 <strong>VPN + 教务账号</strong> 登录；凭据与 Cookie <strong>仅存本机</strong>，不经第三方服务器。</p>
+      </div>
+
+      <div class="phone-stage fade d3" aria-label="应用课表页面预览">
+        <div class="glow"></div>
+        <div class="phone">
+          <div class="status"><span>9:41</span><span>●●● ▮</span></div>
+          <div class="appbar"><b>安财校园通</b><span>第 8 周 · 周三</span></div>
+          <div class="balance"><span>校园卡余额</span><b>¥ 128.60</b></div>
+          <div class="week">
+            <i></i><i>一</i><i>二</i><i class="today">三</i><i>四</i><i>五</i>
+          </div>
+          <div class="grid">
+            <span class="t">1</span><div class="cell"></div><div class="course c2">高等数学</div><div class="cell"></div><div class="course c1">数据结构<br>博雅楼 302</div><div class="cell"></div>
+            <span class="t">2</span><div class="course c3">大学英语</div><div class="cell"></div><div class="course c4">宏观经济学</div><div class="cell"></div><div class="cell"></div>
+            <span class="t">3</span><div class="cell"></div><div class="course c1">线性代数<br>明理楼 201</div><div class="cell"></div><div class="cell"></div><div class="course c2">体育</div>
+            <span class="t">4</span><div class="cell"></div><div class="cell"></div><div class="course c3">Python</div><div class="cell"></div><div class="cell"></div>
+          </div>
+          <div class="tabbar"><span class="on">课表</span><span>选课</span><span>一卡通</span><span>成绩</span><span>我的</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 功能 -->
+  <section class="features" id="features">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Features</span>
+        <h2>一个 App，覆盖校园日常的全部入口</h2>
+        <p>从本课表到电费余额，从选课抢课到第二课堂分数明细，不必再逐个打开网页、反复登录。</p>
+      </div>
+      <div class="cards">
+        <article class="card">
+          <div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>
+          <h3>周网格课表</h3>
+          <p>周一至周日 × 第 1~11 节，按周次过滤、今日列高亮；节次列直接标注上课时间，点击课程弹出详情卡。</p>
+          <span class="tag">支持切换第 1~20 周</span>
+        </article>
+        <article class="card">
+          <div class="ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M3 4h2l2.4 11h11l2-8H6"/></svg></div>
+          <h3>选课中心</h3>
+          <p>方案内选课、自由选课、已选课程三个页签，关键词搜索 + 多选购物车 + 确认弹窗后提交。</p>
+          <span class="tag">非选课阶段自动提示</span>
+        </article>
+        <article class="card">
+          <div class="ico"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg></div>
+          <h3>一卡通</h3>
+          <p>余额独立加载，约 0.1 秒立即可见；消费明细按日期范围查询，收支分色，显示每笔后余额与商户。</p>
+          <span class="tag">近 7 天 / 本月 / 近 3 个月</span>
+        </article>
+        <article class="card">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></div>
+          <h3>成绩查询</h3>
+          <p>本科教务系统全部成绩，按学期分组展示学分、绩点、成绩徽章与课程属性，顶部汇总已修学分与通过门数。</p>
+          <span class="tag">分页加载更多</span>
+        </article>
+        <article class="card">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l2.5 5.2 5.5.8-4 4 .9 5.7L12 16l-4.9 2.7.9-5.7-4-4 5.5-.8z"/></svg></div>
+          <h3>第二课堂成绩单</h3>
+          <p>总分、评定与学分明细按课组可展开，看清每一分的类别、项目与分值来源；另有工作履历、获奖信息。</p>
+          <span class="tag">有记录的课组默认展开</span>
+        </article>
+        <article class="card">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg></div>
+          <h3>宿舍电费</h3>
+          <p>楼栋 → 楼层 → 房间三级下拉，选完自动记忆；剩余电量拆分购电与补助，附用电记录与缴费记录。</p>
+          <span class="tag">下次进入自动定位</span>
+        </article>
+        <article class="card">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-2z"/><path d="M8 7h6M8 11h6"/></svg></div>
+          <h3>培养方案</h3>
+          <p>总门数 / 总学分 / 总课时一览，课组树展示已通过与需修学分进度条，缺修门数及时提醒。</p>
+          <span class="tag">课组进度可视化</span>
+        </article>
+        <article class="card">
+          <div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg></div>
+          <h3>桌面小卡片</h3>
+          <p>「今日课程」与「一卡通余额」两张小组件，30 分钟自动刷新，点击直达对应页面，余额还能手动实时刷新。</p>
+          <span class="tag">课表加载后自动同步</span>
+        </article>
+        <article class="card">
+          <div class="ico"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8"/><path d="M10 21h4"/></svg></div>
+          <h3>上课提醒</h3>
+          <p>课前 5 / 10 / 15 / 20 / 30 / 60 分钟可选发送通知，同一课程当天只提醒一次，重启手机后自动恢复。</p>
+          <span class="tag">后台定时检查课表</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 亮点 -->
+  <section id="why">
+    <div class="wrap highlights">
+      <div>
+        <div class="sec-head" style="text-align:left;margin-bottom:34px">
+          <span class="kicker">Why it works</span>
+          <h2>好用的背后，是把麻烦留给了代码</h2>
+          <p>校园系统多、登录链路长、接口慢且易变，这些细节都被逐一处理好了。</p>
+        </div>
+        <div class="h-list">
+          <div class="h-item"><div class="h-num">1</div><div><h3>一次登录，全局通行</h3><p>WebView 主通道自动完成 VPN 门户 → CAS 统一身份认证 → 教务 / 爱安财 SSO，四步进度实时可见。</p></div></div>
+          <div class="h-item"><div class="h-num">2</div><div><h3>会话过期无感恢复</h3><p>OkHttp 静默通道双级登录 + 每 4 分钟心跳探活，勾选「记住密码」后后台自动重登，无需反复手动登录。</p></div></div>
+          <div class="h-item"><div class="h-num">3</div><div><h3>Cookie 分层隔离，不串号</h3><p>VPN 主域凭据跨子域共享，各子域 JSESSIONID 按来源分桶，避免一卡通 / 电费覆盖教务会话导致选课接口报错。</p></div></div>
+          <div class="h-item"><div class="h-num">4</div><div><h3>数据只留在本机</h3><p>账号凭据与 Cookie 仅存储于本机 SharedPreferences，不经过任何第三方服务器；余额与明细分开加载，余额秒开不等待。</p></div></div>
+        </div>
+      </div>
+      <div class="panel fade d2">
+        <div class="quote">「把 VPN、教务、一卡通、电费和第二课堂，收进一次登录里。」</div>
+        <div class="sub">原生 Android · Kotlin + Jetpack Compose + Material 3，安财蓝主题，单 Activity + Navigation Compose 架构。</div>
+        <div class="panel-stats">
+          <div><b>7+</b><span>聚合校园系统</span></div>
+          <div><b>0.1s</b><span>余额可见</span></div>
+          <div><b>16MB</b><span>安装包体积</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 安装 -->
+  <section class="steps" id="install">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Get started</span>
+        <h2>三步装好，开始使用</h2>
+        <p>下载安装后只需一次登录，之后重开 App 无需重复输入。</p>
+      </div>
+      <div class="step-grid">
+        <div class="step"><div class="n">01</div><h3>下载 APK（密码：1111）</h3><p>点击页面上的「下载」按钮，会自动打开下载页面获取 <strong>安财校园通-v1.5.1.apk</strong>（约 16 MB）。</p></div>
+        <div class="step"><div class="n">02</div><h3>允许并安装</h3><p>Android 7.0 及以上可直接安装；若提示「未知来源应用」，在系统设置中允许本次安装即可。</p></div>
+        <div class="step"><div class="n">03</div><h3>一次登录</h3><p>输入学号与密码（VPN 与教务默认同账号，不同则取消勾选分别填写），登录约 10~30 秒。</p></div>
+      </div>
+      <div class="notice">
+        <strong>小提示：</strong>勾选「记住密码」后，会话过期才能在后台静默重登；桌面长按 → 小部件 → 选择「安财校园通」，可添加今日课程与一卡通余额小卡片；Android 13+ 开启上课提醒时需授予通知权限。
+      </div>
+    </div>
+  </section>
+
+  <!-- 下载 -->
+  <section class="download" id="download">
+    <div class="wrap">
+      <span class="kicker" style="color:#C9E0FF">Download</span>
+      <h2>现在就把校园装进口袋</h2>
+      <p>点击下方按钮，将自动打开下载页面获取最新版 APK。安装后使用校园 VPN 与教务账号登录即可使用全部功能。</p>
+      <a class="btn btn-white btn-lg" data-download
+         href="https://wwaqi.lanzouv.com/iYr3R4ew2u9c"
+         target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 20h16"/></svg>
+        点击下载 · 自动打开下载页
+      </a>
+      <div class="meta">v1.5.1 · Android 7.0+（minSdk 24）· 约 16 MB · APK</div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div><b>安财校园通</b> · Aufé Campus App<br><span style="font-size:12px">由 26 信工 1 班 完成</span></div>
+    <div>问题反馈：<a href="mailto:1964689817@qq.com">1964689817@qq.com</a><br><span style="font-size:12px">所有凭据仅存本机，不经过第三方服务器</span></div>
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite">已在新标签页打开下载页面</div>
+
+<script>
+  // 下载按钮：点击后自动在新标签页打开下载页，并给出轻提示
+  (function () {
+    var toast = document.getElementById('toast');
+    var timer;
+    document.querySelectorAll('[data-download]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        clearTimeout(timer);
+        toast.classList.add('show');
+        timer = setTimeout(function () { toast.classList.remove('show'); }, 2600);
+      });
+    });
+  })();
+
+</script>
+</body>
+</html>
