@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    一卡通余额小卡片的尺寸与配置声明。
+
+    v1.9.0 改动：
+    - minWidth/minHeight 从 140x80dp 降到 110x40dp，minResizeWidth/Height 放到 40dp，
+      这样 1×1 到整屏的格子都能拖得动（原来最小只能到 2×2 的一半，缩不小）。
+    - minResizeWidth/Height 必须显式声明，否则很多启动器仍按 minWidth 卡下限。
+    - configure 指向配置界面，用户可以长按小卡片选「编辑」改背景图；
+      configuration_optional 让「添加时不必强制配置」。
+-->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialLayout="@layout/widget_ykt"
+    android:minHeight="40dp"
+    android:minWidth="110dp"
+    android:minResizeWidth="40dp"
+    android:minResizeHeight="40dp"
+    android:maxResizeWidth="600dp"
+    android:maxResizeHeight="400dp"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="1800000"
+    android:widgetCategory="home_screen"
+    android:configure="cn.aufe.campus.widget.YktWidgetConfigActivity"
+    android:widgetFeatures="reconfigurable|configuration_optional"
+    android:previewLayout="@layout/widget_ykt" />

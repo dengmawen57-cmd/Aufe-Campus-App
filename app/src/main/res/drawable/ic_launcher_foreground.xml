@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- API 26+ 自适应图标前景：学士帽（含流苏），位于 72dp 安全区内 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- 帽板 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,40 L78,50 L54,60 L30,50 Z" />
+    <!-- 帽身 -->
+    <path
+        android:fillColor="#FFD54F"
+        android:pathData="M46,54 L46,64 C46,67.5 49.5,70 54,70 C58.5,70 62,67.5 62,64 L62,54 L58,54 L58,64 C58,65.3 56.2,66.3 54,66.3 C51.8,66.3 50,65.3 50,64 L50,54 Z" />
+    <!-- 流苏 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M76,52 L76,64 C76,64 73,67.5 70,67.5 L70,63.5 C70,63.5 73,62.5 73,59 L73,54.5 Z" />
+    <!-- 流苏穗 -->
+    <path
+        android:fillColor="#FFD54F"
+        android:pathData="M76,64 L76,67.5 L73,67.5 L73,64 Z" />
+</vector>

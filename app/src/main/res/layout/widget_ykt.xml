@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    一卡通余额桌面小卡片。
+
+    结构：FrameLayout = 默认纯色底 + 自定义背景图 + 压暗层 + 文字内容。
+    背景图默认 GONE，只有用户在小卡片设置里选了图才会显示。
+
+    注意：RemoteViews 只认有限的几种布局/控件，这里全用 FrameLayout /
+    LinearLayout / ImageView / TextView，别换成 ConstraintLayout 之类。
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ykt_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_bg">
+
+    <!--
+        自定义背景图。
+        ⚠️ 必须是 fitXY，不能是 centerCrop —— 位图在 YktWidgetPrefs 里**已经**
+        按卡片真实宽高比中心裁剪过，比例与卡片一致，fitXY 只会原样铺满；
+        而 centerCrop 会在位图比例与卡片有出入时再裁一刀，把已经切好的
+        16dp 圆角四条边直接裁掉，桌面上就成了直角（v1.9.0 的 bug）。
+        尺寸已在 YktWidgetPrefs 里压到长边 ≤512px、总像素 ≤10 万。
+    -->
+    <ImageView
+        android:id="@+id/ykt_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        android:contentDescription="@null" />
+
+    <!-- 压暗层：默认全透明，设置里可调 0~70%，保证任何图上文字都读得清 -->
+    <ImageView
+        android:id="@+id/ykt_scrim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null" />
+
+    <LinearLayout
+        android:id="@+id/ykt_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/ykt_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="一卡通余额"
+                android:textColor="#FF1A1C1E"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <!--
+                刷新按钮：真的做成一个按钮（圆角实心底 + 内边距），
+                最小 54x32dp 保证手指点得到。之前是 11sp 的一行小字，
+                在小尺寸卡片上几乎点不中。
+            -->
+            <TextView
+                android:id="@+id/ykt_refresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/widget_btn_refresh"
+                android:gravity="center"
+                android:minWidth="54dp"
+                android:minHeight="32dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="刷新"
+                android:textColor="#FFFFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/ykt_balance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="¥0.00"
+            android:textColor="#FF1A5FB4"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/ykt_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="暂无数据"
+            android:textColor="#FF44474E"
+            android:textSize="10sp" />
+    </LinearLayout>
+</FrameLayout>

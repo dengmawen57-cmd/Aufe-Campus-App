@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_bg_sakura">#E2B9DC</color>
+    <color name="ic_launcher_bg_starry">#1B1D3F</color>
+    <color name="ic_launcher_bg_cat">#DDB68E</color>
+    <color name="ic_launcher_bg_aurora">#060518</color>
+    <color name="ic_launcher_bg_ink">#E2D8C6</color>
+</resources>

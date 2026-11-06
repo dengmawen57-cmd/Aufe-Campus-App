@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    FileProvider 路径白名单。
+    诊断日志写到 cacheDir/logs/，分享时只授权这一个目录，
+    不会把整个 cacheDir 或外部存储暴露出去。
+-->
+<paths>
+    <cache-path name="logs" path="logs/" />
+    <files-path name="crash" path="." />
+</paths>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    小卡片上的「刷新」按钮底。
+    做成一枚实心圆角块，是为了让它在桌面上一眼就是「可以点的按钮」，
+    而不是原来那行 11sp 的小字（尺寸小又没边界，基本点不中）。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#FF1A5FB4" />
+    <corners android:radius="9dp" />
+</shape>

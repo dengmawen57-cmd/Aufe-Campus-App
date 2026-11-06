@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.AufeCampus" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!--
+        取件码页（v1.12.0 移植自 HandyCode）专用主题。
+
+        为什么另起一个而不是复用 Theme.AufeCampus：
+        那是一个空壳（只继承 NoActionBar），而取件码页需要
+        **浅色状态栏图标 + 浅色导航栏图标 + 固定的浅灰窗口底色**。
+        它是原生 View 页面、自己画整套 UI，不跟 Compose 主题换肤，
+        窗口底色必须在 Activity 启动的第一帧就正确，否则会闪一下黑/白。
+    -->
+    <style name="Theme.AufeParcel" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowBackground">#F7F8FB</item>
+        <item name="android:colorAccent">#EB6238</item>
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+</resources>

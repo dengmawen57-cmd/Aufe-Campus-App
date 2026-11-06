@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    取件码桌面小卡片（v1.12.0）。
+
+    为什么长这样：它的唯一职责是"一步打开取件码"，所以不放二维码、
+    不做数据刷新 —— 身份码要现取现用，提前缓存到桌面反而是风险。
+    两个平台各给一个按钮，点了直接进对应平台的那一栏。
+
+    RemoteViews 只认有限的布局/控件：这里全用 LinearLayout / TextView，
+    别换成 ConstraintLayout 之类（会在桌面上 inflate 失败，变成"加载中"）。
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parcel_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_bg"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/parcel_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="取件码"
+            android:textColor="#FF1A1C1E"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- 高度不足时由 Provider 把这一行隐藏，优先保住两个按钮 -->
+    <TextView
+        android:id="@+id/parcel_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="身份码 · 待取包裹"
+        android:textColor="#FF697386"
+        android:textSize="10sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="6dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/parcel_taobao"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/widget_btn_taobao"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="淘宝"
+            android:textColor="#FFFFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/parcel_pdd"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/widget_btn_pdd"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="拼多多"
+            android:textColor="#FFFFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

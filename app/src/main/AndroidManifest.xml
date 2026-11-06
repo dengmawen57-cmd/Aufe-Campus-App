@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- 后台常驻：前台服务 + 电池优化白名单 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- 导出成绩 CSV / 诊断日志到公共下载目录：Android 10+ 走 MediaStore 不需要它 -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
+    <!--
+        包可见性（Android 11+ 必须声明）：
+        「校园网」板块要判断微信装没装、能不能接住链接，不声明 queries 时
+        getPackageInfo / resolveActivity 一律返回"查不到"，现象就是
+        "明明装了微信却说没装"。
+    -->
+    <queries>
+        <package android:name="com.tencent.mm" />
+    </queries>
+
+    <application
+        android:name=".CampusApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:theme="@style/Theme.AufeCampus">
+
+        <!--
+            启动器入口：v1.8.2 起改用 activity-alias，实现「换图标」。
+
+            原理：Android 没有运行时改 launcher 图标的 API，标准做法是为每套
+            图标声明一个 alias（都指向同一个 MainActivity，只是 icon 不同），
+            切换时用 PackageManager.setComponentEnabledSetting 开关它们。
+
+            注意：MainActivity 本身**不再**声明 LAUNCHER intent-filter，
+            否则桌面上会同时出现原图标和 alias 图标两个入口。
+            默认入口 IconDefault 必须保持 enabled=true，避免应用从桌面消失。
+        -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|uiMode|density"
+            android:theme="@style/Theme.AufeCampus" />
+
+        <!--
+            取件码（v1.12.0 移植自 HandyCode）。
+            淘宝 / 拼多多的官方身份码与待取包裹，一张卡片上下两栏。
+            它是纯原生 Activity（不是 Compose 页面），所以单列一条，
+            用的是它自己的浅色主题（Theme.AufeParcel），不跟随 App 换肤。
+
+            这里**故意不声明 configChanges**：这个页面整套 UI 是代码里按当前
+            屏幕尺寸算出来的，横竖屏切换时让它正常重建一次反而对
+            （原项目也是这么运行的）。加了 configChanges 不重建，布局会留在旧尺寸上。
+
+            exported=false：只有 App 内部的菜单和桌面小卡片会拉起它，
+            外部应用没必要也不应该直接进来（里面有各平台的登录态）。
+        -->
+        <activity
+            android:name="com.fairycrane.handycode.ParcelCodeActivity"
+            android:exported="false"
+            android:label="取件码"
+            android:windowSoftInputMode="adjustNothing"
+            android:theme="@style/Theme.AufeParcel" />
+
+        <activity-alias
+            android:name=".IconDefault"
+            android:targetActivity=".MainActivity"
+            android:exported="true"
+            android:enabled="true"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconSakura"
+            android:targetActivity=".MainActivity"
+            android:exported="true"
+            android:enabled="false"
+            android:icon="@mipmap/ic_launcher_sakura"
+            android:roundIcon="@mipmap/ic_launcher_sakura"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconStarry"
+            android:targetActivity=".MainActivity"
+            android:exported="true"
+            android:enabled="false"
+            android:icon="@mipmap/ic_launcher_starry"
+            android:roundIcon="@mipmap/ic_launcher_starry"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconCat"
+            android:targetActivity=".MainActivity"
+            android:exported="true"
+            android:enabled="false"
+            android:icon="@mipmap/ic_launcher_cat"
+            android:roundIcon="@mipmap/ic_launcher_cat"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconAurora"
+            android:targetActivity=".MainActivity"
+            android:exported="true"
+            android:enabled="false"
+            android:icon="@mipmap/ic_launcher_aurora"
+            android:roundIcon="@mipmap/ic_launcher_aurora"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".IconInk"
+            android:targetActivity=".MainActivity"
+            android:exported="true"
+            android:enabled="false"
+            android:icon="@mipmap/ic_launcher_ink"
+            android:roundIcon="@mipmap/ic_launcher_ink"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- 今日课程小组件（Glance） -->
+        <receiver
+            android:name=".widget.ScheduleDayWidgetReceiver"
+            android:exported="true"
+            android:label="今日课程">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/schedule_day_widget_info" />
+        </receiver>
+
+        <!-- 一周课表小组件（Glance） -->
+        <receiver
+            android:name=".widget.ScheduleWeekWidgetReceiver"
+            android:exported="true"
+            android:label="一周课表">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/schedule_week_widget_info" />
+        </receiver>
+
+        <!-- 一卡通余额桌面小卡片 -->
+        <!-- 小卡片的配置界面：长按卡片 → 编辑（或添加卡片时）进入，可换背景图/文字配色 -->
+        <activity
+            android:name=".widget.YktWidgetConfigActivity"
+            android:exported="true"
+            android:label="余额小卡片设置"
+            android:theme="@style/Theme.AufeCampus">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <!-- 课程表小组件（今日 / 一周）的背景图配置：添加时弹出、长按「编辑」、或从 App 设置页进入 -->
+        <activity
+            android:name=".widget.ScheduleWidgetConfigActivity"
+            android:exported="true"
+            android:label="课程表小卡片设置"
+            android:theme="@style/Theme.AufeCampus">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".widget.YktWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="cn.aufe.campus.action.YKT_WIDGET_REFRESH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/ykt_widget_info" />
+        </receiver>
+
+        <!--
+            取件码小卡片（v1.12.0）：两个平台各一个按钮，点了直接进对应那一栏。
+            小卡片拉到前台用的是 PendingIntent，走的是本 App 自己的身份，
+            所以 ParcelCodeActivity 声明成 exported=false 也能正常打开。
+        -->
+        <receiver
+            android:name=".widget.ParcelWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/parcel_widget_info" />
+        </receiver>
+
+        <!-- 上课提醒：定时检测 + 开机恢复 -->
+        <receiver
+            android:name=".widget.ClassReminderReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="cn.aufe.campus.action.CLASS_REMINDER_TICK" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 后台常驻：前台服务（常驻通知 + 提醒 tick + 小组件刷新） -->
+        <service
+            android:name=".service.KeepAliveService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync"
+            android:stopWithTask="false" />
+
+        <!-- 常驻通知按钮 / 被系统回收后的自救重启 -->
+        <receiver
+            android:name=".service.KeepAliveActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="cn.aufe.campus.action.KEEP_ALIVE_STOP" />
+                <action android:name="cn.aufe.campus.action.KEEP_ALIVE_START" />
+                <action android:name="cn.aufe.campus.action.KEEP_ALIVE_RESTART" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 诊断日志分享：把 cacheDir/logs 下的文件用 FileProvider 授权出去 -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+
+</manifest>

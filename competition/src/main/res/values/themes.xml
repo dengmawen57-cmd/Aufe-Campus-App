@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 仅作为独立预览时的兜底主题；接入宿主 App 时可直接继承宿主主题 -->
+    <style name="Theme.CompetitionWeb" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">#1565C0</item>
+        <item name="colorPrimaryDark">#0D47A1</item>
+        <item name="colorAccent">#42A5F5</item>
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+</resources>

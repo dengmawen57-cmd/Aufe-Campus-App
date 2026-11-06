@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    取件码小卡片的尺寸声明（v1.12.0）。
+
+    - 最小 2×1（约 140×60dp 起）：再小塞不下"淘宝 / 拼多多"两个按钮；
+    - 可横竖拖动放大，但不做尺寸分档 —— 内容只有两个按钮，放大就是变得更
+      好点，没必要换排版；
+    - updatePeriodMillis=0：它不展示任何会变的数据，定时唤醒纯属浪费电，
+      内容在 onUpdate / 尺寸变化时刷一次就够。
+-->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialLayout="@layout/widget_parcel"
+    android:minWidth="140dp"
+    android:minHeight="60dp"
+    android:minResizeWidth="110dp"
+    android:minResizeHeight="50dp"
+    android:maxResizeWidth="600dp"
+    android:maxResizeHeight="400dp"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen"
+    android:previewLayout="@layout/widget_parcel" />

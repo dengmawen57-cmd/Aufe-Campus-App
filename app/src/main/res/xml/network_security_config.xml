@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">aufe.edu.cn</domain>
+        <domain includeSubdomains="true">acxk.net</domain>
+        <domain includeSubdomains="true">acthink.net</domain>
+        <!-- 学科竞赛平台：校内 IP 直连 + WebVPN 改写域名都走 http -->
+        <domain includeSubdomains="true">211.86.241.245</domain>
+    </domain-config>
+</network-security-config>

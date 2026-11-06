@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  放在宿主 App 的 res/xml/ 下，并在 AndroidManifest 的 <application> 上引用：
+      android:networkSecurityConfig="@xml/network_security_config"
+
+  为什么必须加：该平台是 http（明文），Android 9 起默认禁止明文流量，
+  不加这段会直接 ERR_CLEARTEXT_NOT_PERMITTED，页面全白。
+  这里只对校内域名放行，不打开全局 usesCleartextTraffic，避免被应用市场判为不安全。
+-->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">aufe.edu.cn</domain>
+        <domain includeSubdomains="true">211.86.241.245</domain>
+    </domain-config>
+</network-security-config>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 访问校内平台所需的最小权限集 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application>
+
+        <!--
+          exported=false：只允许宿主 App 内部跳转，避免被外部拉起。
+          configChanges 自己吃掉旋转/分屏，防止 WebView 重建导致表单内容丢失。
+        -->
+        <activity
+            android:name=".CompetitionWebActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|keyboardHidden|screenLayout|uiMode"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.CompetitionWeb"
+            android:windowSoftInputMode="adjustResize" />
+
+    </application>
+</manifest>
